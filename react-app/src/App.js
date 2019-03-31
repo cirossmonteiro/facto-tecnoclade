@@ -49,6 +49,15 @@ class App extends Component {
     this.computeData();
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot){
+    if (prevState.pages != this.state.pages || prevState.cats != this.state.cats)
+      this.computeData();
+  }
+
+  handleChange = (event) => {
+    this.setState({[event.target.name]: event.target.value});
+  }
+
   render() {
     const { w, data, pages, cats } = this.state;
     //var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
@@ -61,7 +70,8 @@ class App extends Component {
     const Chart = (Choose = Line) => {
       var lines = [];
       for(let l = 0; l < cats; l++){
-        lines.push(<Choose type="monotone" key={l.toString()} dataKey={`d${l}`} fill={randC()} />);
+        let tempColor = randC();
+        lines.push(<Choose type="monotone" key={l.toString()} dataKey={`d${l}`} stroke={tempColor} fill={tempColor} />);
       }
       var ret = (
         <ResponsiveContainer key={Date()}>
@@ -85,10 +95,10 @@ class App extends Component {
       <div className="App"  style={{background: bg}}>
         <div className="Inputs">
           <div className="Input">
-            Pages: <input type="number" placeholder="between 1 and 10"/>
+            Pages: <input type="number" name="pages" placeholder="between 1 and 10" value={pages} onChange={this.handleChange}/>
           </div>
           <div className="Input">
-            Lines: <input type="number" placeholder="between 1 and 10"/>
+            Lines: <input type="number" name="cats" placeholder="between 1 and 10" value={cats} onChange={this.handleChange}/>
           </div>
         </div>
         <div className="All">
